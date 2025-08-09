@@ -22,13 +22,15 @@ func main() {
 	file := strings.Join(os.Args[1:], "")
 
 	// TODO: Remove when no longer testing
-	fmt.Printf("Parsing file %s\n", file)
+	fmt.Printf("Parsing file: %s\n", file)
 
 	data, err := os.ReadFile(file)
 	check(err)
 
-	// TODO: Remove when no longer testing
-	_, err = os.Stdout.Write(data)
+	parser := NewParser(data)
+
+	output, err := parser.Parse()
 	check(err)
 
+	fmt.Printf("Parsed output: %v\n", output)
 }
