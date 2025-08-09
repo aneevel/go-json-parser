@@ -29,8 +29,13 @@ func main() {
 
 	parser := NewParser(data)
 
-	output, err := parser.Parse()
-	check(err)
+	status := parser.Parse()
 
-	fmt.Printf("Parsed output: %v\n", output)
+	if status == 0 {
+		fmt.Println("Valid JSON")
+	} else {
+		fmt.Println("Invalid JSON")
+	}
+
+	fmt.Printf("Parsed output: %v\n", status)
 }

@@ -8,9 +8,12 @@ const (
 )
 
 type Lexer struct {
+	tokens []byte
 }
 
-func NewLexer() *Lexer {
-	l := &Lexer{}
+func NewLexer(tokens []byte) *Lexer {
+	l := &Lexer{
+		tokens: tokens,
+	}
 	return l
 }

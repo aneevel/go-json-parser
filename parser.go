@@ -1,15 +1,15 @@
 package main
 
 type Parser struct {
-	tokens []byte
+	lexer *Lexer
 }
 
 func NewParser(tokens []byte) *Parser {
 	return &Parser{
-		tokens: tokens,
+		lexer: NewLexer(tokens),
 	}
 }
 
-func (p *Parser) Parse() {
-
+func (p *Parser) Parse() (status int) {
+	return 0
 }
