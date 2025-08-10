@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 type TokenType string
 
 type Token struct {
@@ -12,44 +8,69 @@ type Token struct {
 }
 
 const (
-	Unknown     TokenType = "Unknown"
-	BeginObject TokenType = "{"
-	EndObject   TokenType = "}"
-	EndOfFile   TokenType = "EOF"
+	INVALID      TokenType = "INVALID"
+	BEGIN_OBJECT TokenType = "{"
+	END_OBJECT   TokenType = "}"
+	END_OF_FILE  TokenType = "EOF"
 )
 
+/**
+* By utilizing "readPosition", we have a lookahead
+* pointer that helps us understand what is coming next and
+* react to it
+ */
 type Lexer struct {
-	tokens   []byte
-	position int
-	current  byte
+	input        string
+	position     int
+	readPosition int
+	current      byte
 }
 
-func NewLexer(tokens []byte) *Lexer {
+func NewLexer(input string) *Lexer {
 	l := &Lexer{
-		tokens:   tokens,
-		position: 0,
+		input: input,
 	}
+	l.readChar()
 	return l
 }
 
-func (l *Lexer) NextToken() {
-	l.position++
+/**
+* Read the next character into current, progressing
+* the readPosition pointer
+ */
+func (l *Lexer) readChar() {
 
-	if l.position < len(l.tokens) {
-		l.current = l.tokens[l.position]
+	// We have progressed past the extent of the input and
+	// should signal EOF
+	if l.readPosition >= len(l.input) {
+		l.current = 0
+	} else {
+		l.current = l.input[l.readPosition]
 	}
+
+	l.position = l.readPosition
+	l.readPosition++
 }
 
-func (l *Lexer) GetToken() Token {
+/**
+* Get the next token in the string, advancing the
+* pointer in the process
+ */
+func (l *Lexer) NextToken() Token {
+
+	var token Token
 
 	switch l.current {
 	case '{':
-		return Token{BeginObject, string(l.current)}
+		token = Token{BEGIN_OBJECT, string(l.current)}
 	case '}':
-		return Token{EndObject, string(l.current)}
+		token = Token{END_OBJECT, string(l.current)}
 	case 0:
-		return Token{EndOfFile, string(l.current)}
+		token = Token{END_OF_FILE, string(l.current)}
 	default:
-		return Token{Unknown, string(l.current)}
+		token = Token{INVALID, string(l.current)}
 	}
+
+	l.readChar()
+	return token
 }
