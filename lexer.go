@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type TokenType string
 
 type Token struct {
@@ -68,9 +70,12 @@ func (l *Lexer) NextToken() Token {
 		token = Token{BEGIN_OBJECT, string(l.current)}
 	case '}':
 		token = Token{END_OBJECT, string(l.current)}
+	case '"':
+		token = l.parseString()
 	case 0:
 		token = Token{END_OF_FILE, ""}
 	default:
+		fmt.Printf("Encountered illegal character %s\n", string(l.current))
 		token = Token{INVALID, string(l.current)}
 	}
 

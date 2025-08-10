@@ -24,7 +24,9 @@ func (p *Parser) Parse() (status int) {
 		return 1
 	}
 
-	p.nextToken()
+	for p.token.Type != INVALID {
+		p.nextToken()
+	}
 
 	if p.token.Type != END_OBJECT {
 		return 1
