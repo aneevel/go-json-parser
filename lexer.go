@@ -58,6 +58,9 @@ func (l *Lexer) readChar() {
  */
 func (l *Lexer) NextToken() Token {
 
+	// We ignore all whitespace
+	l.skipWhitespace()
+
 	var token Token
 
 	switch l.current {
@@ -66,11 +69,20 @@ func (l *Lexer) NextToken() Token {
 	case '}':
 		token = Token{END_OBJECT, string(l.current)}
 	case 0:
-		token = Token{END_OF_FILE, string(l.current)}
+		token = Token{END_OF_FILE, ""}
 	default:
 		token = Token{INVALID, string(l.current)}
 	}
 
 	l.readChar()
 	return token
+}
+
+/**
+* Progresses the current character past all whitespace characters
+ */
+func (l *Lexer) skipWhitespace() {
+	for l.current == ' ' || l.current == '\t' || l.current == '\n' || l.current == '\r' {
+		l.readChar()
+	}
 }

@@ -27,7 +27,7 @@ func main() {
 	data, err := os.ReadFile(file)
 	check(err)
 
-	parser := NewParser(data)
+	parser := NewParser(string(data))
 
 	status := parser.Parse()
 
@@ -36,6 +36,4 @@ func main() {
 	} else {
 		fmt.Println("Invalid JSON")
 	}
-
-	fmt.Printf("Parsed output: %v\n", status)
 }
