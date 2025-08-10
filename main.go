@@ -29,11 +29,11 @@ func main() {
 
 	parser := NewParser(string(data))
 
-	status := parser.Parse()
+	status, output := parser.Parse()
 
 	if status == 0 {
-		fmt.Println("Valid JSON")
+		fmt.Printf("Parsed JSON: %s\n", output)
 	} else {
-		fmt.Println("Invalid JSON")
+		fmt.Printf("Invalid JSON: %s\n", output)
 	}
 }

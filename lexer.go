@@ -10,10 +10,12 @@ type Token struct {
 }
 
 const (
-	INVALID      TokenType = "INVALID"
-	BEGIN_OBJECT TokenType = "{"
-	END_OBJECT   TokenType = "}"
-	END_OF_FILE  TokenType = "EOF"
+	INVALID        TokenType = "INVALID"
+	BEGIN_OBJECT   TokenType = "{"
+	END_OBJECT     TokenType = "}"
+	END_OF_FILE    TokenType = "EOF"
+	STRING         TokenType = "STRING"
+	NAME_SEPARATOR TokenType = ":"
 )
 
 /**
@@ -71,7 +73,7 @@ func (l *Lexer) NextToken() Token {
 	case '}':
 		token = Token{END_OBJECT, string(l.current)}
 	case '"':
-		token = l.parseString()
+		token = l.readString()
 	case 0:
 		token = Token{END_OF_FILE, ""}
 	default:
@@ -80,6 +82,32 @@ func (l *Lexer) NextToken() Token {
 	}
 
 	l.readChar()
+	return token
+}
+
+/**
+* Reads a string token from input string by looking until the string ends
+ */
+func (l *Lexer) readString() Token {
+	var token Token
+
+	// Save pointer to start of string
+	startPosition := l.position + 1
+	for {
+		l.readChar()
+		// Base case - string ends
+		if l.current == '"' {
+			token = Token{STRING, string(l.input[startPosition:l.position])}
+			break
+		}
+
+		// Base case - we reach EOF inappropriately
+		if l.current == 0 {
+			token = Token{INVALID, string(l.current)}
+			break
+		}
+	}
+
 	return token
 }
 
